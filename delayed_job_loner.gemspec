@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "delayed_job_loner"
   gem.require_paths = ["lib"]
   gem.version       = DelayedJobLoner::VERSION
+  gem.license       = "MIT"
 
   gem.add_dependency 'delayed_job'
 
