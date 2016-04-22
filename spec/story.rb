@@ -20,21 +20,20 @@ ActiveRecord::Schema.define do
     table.datetime :locked_at
     table.string   :locked_by
     table.datetime :failed_at
+    table.string   :queue
     table.string   :loner_hash
     table.timestamps
 
   end
 
   create_table :stories, :force => true do |table|
-    table.string :id, :text
+    table.string :text
   end
 
 end
 
 # Purely useful for test cases...
 class Story < ActiveRecord::Base
-  attr_accessor :id
-
   def tell
     text
   end
