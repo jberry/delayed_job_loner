@@ -34,6 +34,14 @@ end
 
 # Purely useful for test cases...
 class Story < ActiveRecord::Base
+  def self.do_things
+    "Things done?"
+  end
+
+  def self.do_things_with_param(how_many)
+    "Do #{how_many} things."
+  end
+
   def tell
     text
   end

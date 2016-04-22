@@ -32,6 +32,21 @@ describe DelayedJobLoner do
     story.delay(:loner => true).tell.persisted?.should eql false
   end
 
+  it "should not create a job if :loner is specified for class method and another call to the same method exists" do
+    Story.delay(:loner => true).do_things.persisted?.should eql true
+    Story.delay(:loner => true).do_things.persisted?.should eql false
+
+    Story.delay(:loner => true).do_things_with_param(1).persisted?.should eql true
+    Story.delay(:loner => true).do_things_with_param(2).persisted?.should eql false
+  end
+
+  it "should not create a job if unique_on is specified for a class method with the same method and unique value" do
+    Story.delay(:unique_on => 1).do_things_with_param(1).persisted?.should eql true
+    Story.delay(:unique_on => 2).do_things_with_param(1).persisted?.should eql true
+    Story.delay(:unique_on => 1).do_things_with_param(1).persisted?.should eql false
+    Story.delay(:unique_on => 2).do_things_with_param(1).persisted?.should eql false
+  end
+
   it "should return a unique md5 hash" do
     story = Story.create(:text => "foo")
     story2 = Story.create(:text => "foo")
@@ -40,7 +55,7 @@ describe DelayedJobLoner do
 
     dj_object = story.whatever
     dj_object2 = story2.whatever
-    
+
     dj_object.generate_loner_hash.should_not eql dj_object2.generate_loner_hash
     dj_object.loner_hash.should eql dj_object.generate_loner_hash
   end
