@@ -35,7 +35,6 @@ Pass the option `:loner` or `:unique_on` to any method that you would provide `:
 Here is an example:
 ```ruby
 class Foo < ActiveRecord::Base
-
   def do_all_the_things
     # All the things!
   end
@@ -44,7 +43,6 @@ class Foo < ActiveRecord::Base
   def do_some_of_the_things
     # Some of the things!
   end
-
 end
 ```
 
