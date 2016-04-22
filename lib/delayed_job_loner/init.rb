@@ -21,11 +21,19 @@ module Delayed
         def generate_loner_hash
           if unique_on
             hashable_string = "#{payload_object.method_name}"
-            unique_on.each do |attribute_name|
-              hashable_string += "::#{attribute_name}:#{payload_object.send(attribute_name)}"
+            if payload_object.object.is_a?(Class)
+              Array(unique_on).each do |value|
+                hashable_string += "::#{value}"
+              end
+            else
+              unique_on.each do |attribute_name|
+                hashable_string += "::#{attribute_name}:#{payload_object.send(attribute_name)}"
+              end
             end
           else
-            hashable_string = "#{payload_object.method_name}::id:#{payload_object.id}"
+            hashable_string = "#{payload_object.method_name}"
+            hashable_string += "::id:#{payload_object.id}" unless payload_object.object.is_a?(Class)
+
           end
           Digest::MD5.base64digest(hashable_string)
         end

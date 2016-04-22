@@ -35,7 +35,7 @@ Pass the option `:loner` or `:unique_on` to any method that you would provide `:
 Here is an example:
 ```ruby
 class Foo < ActiveRecord::Base
-  
+
   def do_all_the_things
     # All the things!
   end
@@ -63,6 +63,23 @@ foo.delay(:priority => 10, :loner => true).do_some_of_the_things
 foo.delay(:priority => 10).do_some_of_the_things
   # Creates a new job because we didn't specify :unique_on
 ```
+
+You can use loner to prevent duplicate Class level methods too
+```ruby
+Foo.delay.do_some_things()
+  # Creates a new job
+Foo.delay(loner: true)
+  # Doesn't create a new job
+```
+
+Or use unique_on to specific a unique value for Class level methods
+```ruby
+Foo.delay.do_some_things(1235)
+  # Creates a new job
+Foo.delay(unique_on: 1235)
+  # Doesn't create a new job
+```
+
 
 ## Contributing
 
