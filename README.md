@@ -66,7 +66,7 @@ You can use loner to prevent duplicate Class level methods too
 ```ruby
 Foo.delay.do_some_things()
   # Creates a new job
-Foo.delay(loner: true)
+Foo.delay(loner: true).do_some_things()
   # Doesn't create a new job
 ```
 
@@ -74,7 +74,7 @@ Or use unique_on to specific a unique value for Class level methods
 ```ruby
 Foo.delay.do_some_things(1235)
   # Creates a new job
-Foo.delay(unique_on: 1235)
+Foo.delay(unique_on: 1235).do_some_things(1235)
   # Doesn't create a new job
 ```
 
