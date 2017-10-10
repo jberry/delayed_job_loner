@@ -19,7 +19,7 @@ module Delayed
         end
 
         def generate_loner_hash
-          job_name = payload_object.kind_of?(PerformableMethod) ? payload_object.method_name : payload_object.class.name
+          job_name = payload_object.respond_to?(:display_name) ? payload_object.display_name : payload_object.class.name
           if unique_on
             hashable_string = "#{job_name}"
             unique_on.each do |attribute_name|
