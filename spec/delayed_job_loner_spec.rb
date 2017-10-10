@@ -51,4 +51,10 @@ describe DelayedJobLoner do
     expect(job).to be_persisted
     expect(job2).to_not be_persisted
   end
+
+  it "allows unique_on to be a single symbol" do
+    story = Story.create(:text => "foo")
+    job   = Delayed::Job.enqueue(PerformStoryJob.new(story), unique_on: :story_id)
+    expect(job).to be_persisted
+  end
 end
