@@ -19,17 +19,17 @@ module Delayed
         end
 
         def generate_loner_hash
+          job_name = payload_object.kind_of?(PerformableMethod) ? payload_object.method_name : payload_object.class.name
           if unique_on
-            hashable_string = "#{payload_object.method_name}"
+            hashable_string = "#{job_name}"
             unique_on.each do |attribute_name|
               hashable_string += "::#{attribute_name}:#{payload_object.send(attribute_name)}"
             end
           else
-            hashable_string = "#{payload_object.method_name}::id:#{payload_object.id}"
+            hashable_string = "#{job_name}::id:#{payload_object.id}"
           end
           Digest::MD5.base64digest(hashable_string)
         end
-
       end
     end
   end

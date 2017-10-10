@@ -47,3 +47,19 @@ class Story < ActiveRecord::Base
   handle_asynchronously :whatever, :loner => true, :priority => 10
 
 end
+
+class PerformStoryJob
+  attr_reader :story_id
+
+  def initialize(story)
+    @story_id = story.id
+  end
+
+  def perform
+    story.tell
+  end
+
+  def story
+    Story.find(@story_id)
+  end
+end

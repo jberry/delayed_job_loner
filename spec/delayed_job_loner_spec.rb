@@ -19,8 +19,6 @@ describe DelayedJobLoner do
     story2.delay(:unique_on => [:id]).tell.persisted?.should eql true
   end
 
-  # This test is broken right now because of an issue with attr_accessor not being able to be set by mass assignment in my tests.
-  # It works in real life...
   it "should not create a job if :loner is specified and a similar job exists" do
     story = Story.create(:text => "foo")
     story.reload
@@ -40,9 +38,17 @@ describe DelayedJobLoner do
 
     dj_object = story.whatever
     dj_object2 = story2.whatever
-    
+
     dj_object.generate_loner_hash.should_not eql dj_object2.generate_loner_hash
     dj_object.loner_hash.should eql dj_object.generate_loner_hash
   end
 
+  it "works with Job.enqueue options" do
+    story = Story.create(:text => "foo")
+    job   = Delayed::Job.enqueue(PerformStoryJob.new(story), unique_on: [:story_id])
+    job2  = Delayed::Job.enqueue(PerformStoryJob.new(story), unique_on: [:story_id])
+
+    expect(job).to be_persisted
+    expect(job2).to_not be_persisted
+  end
 end
