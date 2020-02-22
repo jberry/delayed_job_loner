@@ -6,14 +6,20 @@ module Delayed
       class Job < ::ActiveRecord::Base
         attr_accessor :loner
         attr_accessor :unique_on
+        attr_accessor :store_conflict_id_from
 
         validate :check_uniqueness
 
         def check_uniqueness
           if loner || unique_on
             self.loner_hash = generate_loner_hash
-            self.loner_conflict = self.class.where(loner_hash: self.loner_hash).first
-            self.errors.add(:base, "Job already exists") unless self.loner_conflict.nil?
+            conflict = self.class.where(loner_hash: self.loner_hash).first
+            unless conflict.nil?
+              self.errors.add(:base, "Job already exists")
+              if store_conflict_id_from
+                self.loner_conflict = conflict.payload_object.send(store_conflict_id_from)
+              end
+            end
           else
             true
           end
