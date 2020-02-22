@@ -23,6 +23,7 @@ ActiveRecord::Schema.define do
     table.string :queue                              # The name of the queue this job is in
     table.timestamps null: true
     table.string   :loner_hash
+    table.string   :loner_conflict
   end
 
   add_index :delayed_jobs, [:priority, :run_at], name: "delayed_jobs_priority"
