@@ -12,7 +12,8 @@ module Delayed
         def check_uniqueness
           if loner || unique_on
             self.loner_hash = generate_loner_hash
-            self.errors.add(:base, "Job already exists") unless self.class.where(loner_hash: self.loner_hash, locked_by: nil).first.nil?
+            self.loner_conflict = self.class.where(loner_hash: self.loner_hash).first
+            self.errors.add(:base, "Job already exists") unless self.loner_conflict.nil?
           else
             true
           end

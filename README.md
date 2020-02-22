@@ -21,7 +21,7 @@ Or install it yourself as:
 The jobs table requires a migration to add the loner_hash string field.
 
 <pre>
-$ script/rails generate delayed_job_loner
+$ script/rails generate delayed_job_lonerdelayed_job_loner
 $ rake db:migrate
 </pre>
 
