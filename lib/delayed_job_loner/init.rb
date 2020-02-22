@@ -19,17 +19,10 @@ module Delayed
         end
 
         def generate_loner_hash
-          if unique_on
-            hashable_string = "#{payload_object.method_name}"
-            unique_on.each do |attribute_name|
-              hashable_string += "::#{attribute_name}:#{payload_object.send(attribute_name)}"
-            end
-          else
-            hashable_string = "#{payload_object.method_name}::id:#{payload_object.id}"
-          end
-          Digest::MD5.base64digest(hashable_string)
+          attrs    = Array(unique_on || :id)
+          hashval  = "#{name}::" + attrs.map {|attr| "#{attr}:#{payload_object.send(attr)}"}.join('::')
+          Digest::MD5.base64digest(hashval)
         end
-
       end
     end
   end
